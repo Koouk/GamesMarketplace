@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: v.2021-05-20-AddUniqueProcessTable
+      author: Aleksander Papiez
+      changes:
+        - createTable:
+            tableName: unique_process_instances
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: process_hash
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: create_timestamp
+                  type: timestamp without time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_timestamp
+                  type: timestamp without time zone
+                  constraints:
+                    nullable: false
+        - createSequence:
+            cacheSize: 1
+            dataType: int
+            incrementBy: 1
+            minValue: 1
+            sequenceName: unique_process_id_seq
+            startValue: 1
