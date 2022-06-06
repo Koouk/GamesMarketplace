@@ -1,7 +1,7 @@
 package com.example.tiwpr.config;
 
 import liquibase.integration.spring.SpringLiquibase;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @ConditionalOnProperty(value = "datasource.type", havingValue = "POSTGRESQL")
-@Slf4j
+@Log4j2
 public class PostgresqlDataSourceConfig {
 
     @Value("${datasource.host}")
@@ -34,7 +34,7 @@ public class PostgresqlDataSourceConfig {
     @Bean
     @Primary
     public DataSource postgresqlDataSource() {
-        log.info("Starting with postgresql database...");
+            log.info("Starting with postgresql database...");
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
 
         dataSourceBuilder.driverClassName("org.postgresql.Driver");

@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: v.2021-05-20-AddUniqueProcessTable
+      id: v.2021-06-06-AddTables
       author: Aleksander Papiez
       changes:
         - createTable:
-            tableName: unique_process_instances
+            tableName: account
             columns:
               - column:
                   name: id
@@ -12,19 +12,23 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
-                  name: process_hash
+                  name: nick
                   type: varchar(255)
                   constraints:
                     nullable: false
                     unique: true
               - column:
-                  name: create_timestamp
-                  type: timestamp without time zone
+                  name: email
+                  type: varchar(255)
                   constraints:
                     nullable: false
+                    unique: true
               - column:
-                  name: update_timestamp
-                  type: timestamp without time zone
+                  name: account_balance
+                  type: numeric(12,2)
+              - column:
+                  name: version
+                  type: bigint
                   constraints:
                     nullable: false
         - createSequence:
@@ -32,5 +36,36 @@ databaseChangeLog:
             dataType: int
             incrementBy: 1
             minValue: 1
-            sequenceName: unique_process_id_seq
+            sequenceName: account_id_seq
+            startValue: 1
+
+
+        - createTable:
+            tableName: game
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: buy_date
+                  type: timestamp without time zone
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: owner_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: game_owner_fk
+                    references: account(id)
+
+        - createSequence:
+            cacheSize: 1
+            dataType: int
+            incrementBy: 1
+            minValue: 1
+            sequenceName: game_id_seq
             startValue: 1
