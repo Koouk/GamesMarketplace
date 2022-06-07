@@ -38,8 +38,6 @@ databaseChangeLog:
             minValue: 1
             sequenceName: account_id_seq
             startValue: 1
-
-
         - createTable:
             tableName: game
             columns:
@@ -61,7 +59,6 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: game_owner_fk
                     references: account(id)
-
         - createSequence:
             cacheSize: 1
             dataType: int
@@ -69,3 +66,22 @@ databaseChangeLog:
             minValue: 1
             sequenceName: game_id_seq
             startValue: 1
+  - changeSet:
+      id: v.2022-06-07-AddGames
+      author: Aleksander Papiez
+      changes:
+        - addColumn:
+            tableName: game
+            columns:
+              - column:
+                  name: title
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+              - column:
+                  name: version
+                  type: bigint
+

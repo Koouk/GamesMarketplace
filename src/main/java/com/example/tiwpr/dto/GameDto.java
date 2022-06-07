@@ -1,15 +1,15 @@
-package com.example.tiwpr.entity;
+package com.example.tiwpr.dto;
 
-import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
-@Entity(name = "game")
-public class Game {
+@Getter
+@Setter
+public class GameDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Game_ID_GEN")
-    @SequenceGenerator(name = "Game_ID_GEN", sequenceName = "Game_ID_SEQ", allocationSize = 1)
     private Long id;
 
     @NotBlank
@@ -19,11 +19,7 @@ public class Game {
 
     private String description;
 
-    @ManyToOne
-    private Account owner;
-
-    @Version
-    private Long version;
+    private Long ownerId;
 
     public Long getId() {
         return id;
@@ -57,19 +53,11 @@ public class Game {
         this.description = description;
     }
 
-    public Account getOwner() {
-        return owner;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwner(Account owner) {
-        this.owner = owner;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 }

@@ -7,7 +7,6 @@ import io.swagger.v3.oas.models.info.License;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.filter.ForwardedHeaderFilter;
 
 @Configuration
 public class SwaggerConfig {
@@ -32,11 +31,5 @@ public class SwaggerConfig {
                         .description("SpringShop Wiki Documentation")
                         .url("https://springshop.wiki.github.org/docs"));
     }
-
-    @Bean
-    ForwardedHeaderFilter forwardedHeaderFilter() {
-        return new ForwardedHeaderFilter();
-    }
-
 
 }

@@ -2,8 +2,12 @@ package com.example.tiwpr.controller;
 
 import com.example.tiwpr.dto.AccountDto;
 import com.example.tiwpr.dto.AccountPatch;
+import com.example.tiwpr.dto.GameDto;
 import com.example.tiwpr.entity.Account;
+import com.example.tiwpr.entity.Game;
+import com.example.tiwpr.mapper.AccountGamesMapper;
 import com.example.tiwpr.mapper.AccountMapper;
+import com.example.tiwpr.service.AccountGamesService;
 import com.example.tiwpr.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,11 +17,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.groups.Default;
 import java.util.Optional;
 
 
-@RestController()
+@RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class AccountController {
@@ -25,6 +30,10 @@ public class AccountController {
     private final AccountService accountService;
 
     private final AccountMapper accountMapper;
+
+    private final AccountGamesService accountGamesService;
+
+    private final AccountGamesMapper accountGamesMapper;
 
     @GetMapping
     public Page<AccountDto> getAllUsers(Pageable pageable) {
@@ -70,5 +79,21 @@ public class AccountController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@PathVariable Long userId) {
         accountService.deleteUser(userId);
+    }
+
+
+    @GetMapping("/{userId}/games")
+    public Page<GameDto> getAllUserGames(@PathVariable Long userId, Pageable pageable) {
+        return accountGamesService.getAllUserGamesPageable(userId, pageable)
+                .map(accountGamesMapper::mapGameToGameDto);
+    }
+
+    @PostMapping("/{userId}/games")
+    public ResponseEntity<GameDto> addUserGame(@RequestBody @Valid GameDto gameDto, Long userId) {
+        Game game = accountGamesService.addNewGame(gameDto, userId);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .eTag(String.valueOf(game.getVersion()))
+                .body(accountGamesMapper.mapGameToGameDto(game));
     }
 }
