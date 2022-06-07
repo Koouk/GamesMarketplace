@@ -37,10 +37,11 @@ public class AccountService {
     }
 
     public void updateUser(Long userId, AccountDto user, String etag) {
-        if(!user.getId().equals(userId)) { //todo 404?
+        if(!user.getId().equals(userId)) {
             throw new BadRequestException("Wrong user id");
         }
 
+        accountRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Could not find account " + userId));
         Account updatedAccount = accountMapper.mapAccountDtoToAccount(user);
         updatedAccount.setId(userId);
         updatedAccount.setVersion(Long.valueOf(etag));
@@ -50,7 +51,7 @@ public class AccountService {
 
     public void partialUpdateUser(Long userId, AccountDto user, String etag) {
         Account currentAccount = accountRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Could not find account " + userId));
-        if(!currentAccount.getVersion().equals(Long.valueOf(etag))) { //todo hibernate session messing up
+        if(!currentAccount.getVersion().equals(Long.valueOf(etag))) { //todo hibernate session messing up, fix it later
             throw new WrongVersionException("Wrong version");
         }
 
