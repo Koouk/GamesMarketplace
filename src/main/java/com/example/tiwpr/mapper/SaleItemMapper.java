@@ -16,6 +16,7 @@ public interface SaleItemMapper {
 
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "game", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     SaleItem mergeSaleItemDtoWithSaleItem(@MappingTarget SaleItem currentSaleItem, SaleItemDto newSaleItem);
 

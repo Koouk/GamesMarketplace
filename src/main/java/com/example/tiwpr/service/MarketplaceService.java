@@ -1,10 +1,12 @@
 package com.example.tiwpr.service;
 
 import com.example.tiwpr.dto.SaleItemDto;
+import com.example.tiwpr.entity.Account;
 import com.example.tiwpr.entity.Game;
 import com.example.tiwpr.entity.SaleItem;
 import com.example.tiwpr.exception.BadRequestException;
 import com.example.tiwpr.exception.ResourceNotFoundException;
+import com.example.tiwpr.exception.WrongVersionException;
 import com.example.tiwpr.mapper.SaleItemMapper;
 import com.example.tiwpr.repository.GameRepository;
 import com.example.tiwpr.repository.SaleItemRepository;
@@ -57,7 +59,17 @@ public class MarketplaceService {
     }
 
     public void partialUpdateSaleItem(Long itemId, SaleItemDto saleItemDto, String etag) {
-        //todo do it!
+        SaleItem saleItemToChange = saleItemRepository.findById(itemId).orElseThrow(() -> new ResourceNotFoundException("Could not find saleItem " + itemId));
+        if(!saleItemToChange.getVersion().equals(Long.valueOf(etag))) { //todo hibernate session messing up, fix it later
+            throw new WrongVersionException("Wrong version");
+        }
+
+        SaleItem updatedSaleItem = saleItemMapper.mergeSaleItemDtoWithSaleItem(saleItemToChange, saleItemDto);
+        if(saleItemDto.getGameId() != null) {
+            Game game = gameRepository.findById(saleItemDto.getId()).orElseThrow(() -> new ResourceNotFoundException("Could not find account " + saleItemDto.getGameId()));
+            updatedSaleItem.setGame(game);
+        }
+        saleItemRepository.save(updatedSaleItem);
     }
 
     public void deleteSaleItem(Long itemId) {

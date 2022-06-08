@@ -12,10 +12,4 @@ public interface TradeItemMapper {
 
 
     TradeItemDto mapTradeItemToTradeItemDto(TradeItem TradeItem);
-
-    TradeItem mapTradeItemDtoToTradeItem(TradeItemDto TradeItemDto);
-
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    TradeItem mergeTradeItemDtoWithTradeItem(@MappingTarget TradeItem currentTradeItem, TradeItemDto newTradeItem);
-
 }
