@@ -30,6 +30,12 @@ public class Account {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Game> games = new ArrayList<>();
 
+    @OneToMany(mappedBy = "previousOwner", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<TradeItem> soldItems = new ArrayList<>();
+
+    @OneToMany(mappedBy = "newOwner", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<TradeItem> boughtItems = new ArrayList<>();
+
     @Version
     Long version;
 
@@ -79,5 +85,21 @@ public class Account {
 
     public void setVersion(Long version) {
         this.version = version;
+    }
+
+    public List<TradeItem> getSoldItems() {
+        return soldItems;
+    }
+
+    public void setSoldItems(List<TradeItem> soldItems) {
+        this.soldItems = soldItems;
+    }
+
+    public List<TradeItem> getBoughtItems() {
+        return boughtItems;
+    }
+
+    public void setBoughtItems(List<TradeItem> boughtItems) {
+        this.boughtItems = boughtItems;
     }
 }

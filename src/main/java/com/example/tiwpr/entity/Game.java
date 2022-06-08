@@ -3,6 +3,7 @@ package com.example.tiwpr.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+import java.util.List;
 
 @Entity(name = "game")
 public class Game {
@@ -25,6 +26,10 @@ public class Game {
     @OneToOne(mappedBy = "game", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     private SaleItem saleItem;
 
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<TradeItem> tradeHistory;
+
+
     public SaleItem getSaleItem() {
         return saleItem;
     }
@@ -35,6 +40,14 @@ public class Game {
 
     @Version
     private Long version;
+
+    public List<TradeItem> getTradeHistory() {
+        return tradeHistory;
+    }
+
+    public void setTradeHistory(List<TradeItem> tradeHistory) {
+        this.tradeHistory = tradeHistory;
+    }
 
     public Long getId() {
         return id;

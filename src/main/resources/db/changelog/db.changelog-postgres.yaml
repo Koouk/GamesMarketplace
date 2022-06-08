@@ -51,7 +51,6 @@ databaseChangeLog:
                   type: timestamp without time zone
                   constraints:
                     nullable: false
-                    unique: true
               - column:
                   name: owner_id
                   type: bigint
@@ -123,6 +122,58 @@ databaseChangeLog:
             incrementBy: 1
             minValue: 1
             sequenceName: sale_item_id_seq
+            startValue: 1
+
+
+  - changeSet:
+      id: v.2022-06-07-AddTradeItem
+      author: Aleksander Papiez
+      changes:
+        - createTable:
+            tableName: trade_item
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: price
+                  type: numeric(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: game_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: game_fk
+                    references: game(id)
+              - column:
+                  name: previous_owner_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: previous_owner_id_fk
+                    references: account(id)
+              - column:
+                  name: new_owner_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: new_owner_id_fk
+                    references: account(id)
+              - column:
+                  name: trade_time
+                  type: timestamp without time zone
+                  constraints:
+                    nullable: false
+        - createSequence:
+            cacheSize: 1
+            dataType: int
+            incrementBy: 1
+            minValue: 1
+            sequenceName: trade_item_id_seq
             startValue: 1
 
 

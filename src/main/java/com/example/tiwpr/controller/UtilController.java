@@ -1,32 +1,45 @@
 package com.example.tiwpr.controller;
 
-import com.example.tiwpr.dto.TradeDto;
+import com.example.tiwpr.dto.TradeItemDto;
+import com.example.tiwpr.dto.TradeRequest;
+import com.example.tiwpr.dto.TransferRequestDto;
+import com.example.tiwpr.mapper.TradeItemMapper;
+import com.example.tiwpr.service.TradeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
 
 @RestController
 @RequiredArgsConstructor
 public class UtilController {
 
+    private final TradeService tradeService;
+
+    private final TradeItemMapper tradeItemMapper;
+
+
     @GetMapping("/trade")
-    public Page<TradeDto> getAllTrades(Pageable pageable) {
-        return null;
+    @ResponseStatus(HttpStatus.OK)
+    public Page<TradeItemDto> getAllTrades(Pageable pageable) {
+        return tradeService.getAllTrades(pageable)
+                .map(tradeItemMapper::mapTradeItemToTradeItemDto);
 
     }
 
     @PostMapping("/trade")
-    public TradeDto tradeItem() {
-        return null;
+    @ResponseStatus(HttpStatus.CREATED)
+    public TradeItemDto tradeItem(@RequestBody TradeRequest tradeRequest) {
+        return tradeItemMapper.mapTradeItemToTradeItemDto(
+                tradeService.buyGame(tradeRequest));
     }
 
     @PostMapping("/transfer")
-    public void transferManyGames() {
-
+    @ResponseStatus(HttpStatus.OK)
+    public void transferManyGames(@RequestBody TransferRequestDto transferRequestDto) {
+        tradeService.transferGames(transferRequestDto);
     }
 
 }
