@@ -18,7 +18,7 @@ public class AccountDto {
     private String nick;
 
     @NotBlank
-    @Email(groups = {AccountPatch.class, Default.class}, regexp =  "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$")
+    @Email(groups = {PatchOperation.class, Default.class}, regexp =  "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$")
     private String email;
 
     private BigDecimal accountBalance;

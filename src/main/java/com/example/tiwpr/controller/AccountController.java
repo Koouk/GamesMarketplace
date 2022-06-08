@@ -1,8 +1,8 @@
 package com.example.tiwpr.controller;
 
 import com.example.tiwpr.dto.AccountDto;
-import com.example.tiwpr.dto.AccountPatch;
 import com.example.tiwpr.dto.GameDto;
+import com.example.tiwpr.dto.PatchOperation;
 import com.example.tiwpr.entity.Account;
 import com.example.tiwpr.entity.Game;
 import com.example.tiwpr.mapper.AccountGamesMapper;
@@ -70,7 +70,7 @@ public class AccountController {
 
     @PatchMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public void partialUpdateUser(@PathVariable Long userId, @RequestBody @Validated(AccountPatch.class) AccountDto user, @RequestHeader("If-Match") String etag) {
+    public void partialUpdateUser(@PathVariable Long userId, @RequestBody @Validated(PatchOperation.class) AccountDto user, @RequestHeader("If-Match") String etag) {
         accountService.partialUpdateUser(userId, user, etag);
 
     }
@@ -89,7 +89,7 @@ public class AccountController {
     }
 
     @PostMapping("/{userId}/games")
-    public ResponseEntity<GameDto> addUserGame(@RequestBody @Valid GameDto gameDto, Long userId) {
+    public ResponseEntity<GameDto> addUserGame(@RequestBody @Valid GameDto gameDto,@PathVariable Long userId) {
         Game game = accountGamesService.addNewGame(gameDto, userId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)

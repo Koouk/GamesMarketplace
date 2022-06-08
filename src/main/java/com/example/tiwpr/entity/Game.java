@@ -22,6 +22,17 @@ public class Game {
     @ManyToOne
     private Account owner;
 
+    @OneToOne(mappedBy = "game", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+    private SaleItem saleItem;
+
+    public SaleItem getSaleItem() {
+        return saleItem;
+    }
+
+    public void setSaleItem(SaleItem saleItem) {
+        this.saleItem = saleItem;
+    }
+
     @Version
     private Long version;
 

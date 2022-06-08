@@ -84,4 +84,45 @@ databaseChangeLog:
               - column:
                   name: version
                   type: bigint
+  - changeSet:
+      id: v.2022-06-07-AddSaleItem
+      author: Aleksander Papiez
+      changes:
+        - createTable:
+            tableName: sale_item
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: price
+                  type: numeric(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: game_id
+                  type: bigint
+                  constraints:
+                    unique: true
+                    nullable: false
+                    foreignKeyName: game_fk
+                    references: game(id)
+        - createSequence:
+            cacheSize: 1
+            dataType: int
+            incrementBy: 1
+            minValue: 1
+            sequenceName: sale_item_id_seq
+            startValue: 1
+
 
