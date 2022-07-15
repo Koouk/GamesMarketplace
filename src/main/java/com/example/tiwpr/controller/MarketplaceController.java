@@ -2,9 +2,11 @@ package com.example.tiwpr.controller;
 
 import com.example.tiwpr.dto.SaleItemDto;
 import com.example.tiwpr.entity.SaleItem;
+import com.example.tiwpr.exception.NoEtagException;
 import com.example.tiwpr.mapper.SaleItemMapper;
 import com.example.tiwpr.service.MarketplaceService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -51,14 +53,20 @@ public class MarketplaceController {
 
     @PutMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateSaleItem(@PathVariable Long itemId, @RequestBody @Valid SaleItemDto saleItemDto, @RequestHeader(name = "If-Match") String etag) {
+    public void updateSaleItem(@PathVariable Long itemId, @RequestBody @Valid SaleItemDto saleItemDto, @RequestHeader(name = "If-Match", required = false) String etag) {
+        if(StringUtils.isBlank(etag)) {
+            throw new NoEtagException("No etag");
+        }
         marketplaceService.updateSaleItem(itemId, saleItemDto, etag);
 
     }
 
     @PatchMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public void partialUpdateSaleItem(@PathVariable Long itemId, @RequestBody SaleItemDto saleItemDto, @RequestHeader(name = "If-Match") String etag) {
+    public void partialUpdateSaleItem(@PathVariable Long itemId, @RequestBody SaleItemDto saleItemDto, @RequestHeader(name = "If-Match", required = false) String etag) {
+        if(StringUtils.isBlank(etag)) {
+            throw new NoEtagException("No etag");
+        }
         marketplaceService.partialUpdateSaleItem(itemId, saleItemDto, etag);
 
     }

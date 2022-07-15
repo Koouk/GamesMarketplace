@@ -5,11 +5,16 @@ import com.example.tiwpr.dto.GameDto;
 import com.example.tiwpr.dto.PatchOperation;
 import com.example.tiwpr.entity.Account;
 import com.example.tiwpr.entity.Game;
+import com.example.tiwpr.exception.BadRequestException;
+import com.example.tiwpr.exception.NoEtagException;
+import com.example.tiwpr.exception.ResourceNotFoundException;
 import com.example.tiwpr.mapper.AccountGamesMapper;
 import com.example.tiwpr.mapper.AccountMapper;
+import com.example.tiwpr.repository.TokenRepository;
 import com.example.tiwpr.service.AccountGamesService;
 import com.example.tiwpr.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -36,9 +41,16 @@ public class AccountController {
     private final AccountGamesMapper accountGamesMapper;
 
     @GetMapping
-    public Page<AccountDto> getAllUsers(Pageable pageable) {
-        return accountService.getAllUsersPageable(pageable)
+    public ResponseEntity<Page<AccountDto>> getAllUsers(Pageable pageable) {
+       Page<AccountDto> accountDto = accountService.getAllUsersPageable(pageable)
                 .map(accountMapper::mapAccountToAccountDto);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header("X-Total-Count", String.valueOf(accountDto.getTotalPages()))
+                .body(accountService.getAllUsersPageable(pageable)
+                        .map(accountMapper::mapAccountToAccountDto))
+                ;
     }
 
     @PostMapping
@@ -63,14 +75,20 @@ public class AccountController {
 
     @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateUser(@PathVariable Long userId, @RequestBody @Validated(Default.class) AccountDto user, @RequestHeader(name = "If-Match") String etag) {
+    public void updateUser(@PathVariable Long userId, @RequestBody @Validated(Default.class) AccountDto user, @RequestHeader(name = "If-Match", required = false) String etag) {
+        if(StringUtils.isBlank(etag)) {
+            throw new NoEtagException("No etag");
+        }
         accountService.updateUser(userId, user, etag);
 
     }
 
     @PatchMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public void partialUpdateUser(@PathVariable Long userId, @RequestBody @Validated(PatchOperation.class) AccountDto user, @RequestHeader("If-Match") String etag) {
+    public void partialUpdateUser(@PathVariable Long userId, @RequestBody @Validated(PatchOperation.class) AccountDto user, @RequestHeader(name = "If-Match", required = false) String etag) {
+        if(StringUtils.isBlank(etag)) {
+            throw new NoEtagException("No etag");
+        }
         accountService.partialUpdateUser(userId, user, etag);
 
     }

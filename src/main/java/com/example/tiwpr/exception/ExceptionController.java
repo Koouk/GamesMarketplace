@@ -55,4 +55,11 @@ public class ExceptionController {
         return new ApiExceptionResponse(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
+    @ExceptionHandler(value = {NoEtagException.class})
+    @ResponseStatus(HttpStatus.PRECONDITION_REQUIRED)
+    @ResponseBody
+    public ApiExceptionResponse handleNoEtagException(Exception e) {
+        return new ApiExceptionResponse(HttpStatus.PRECONDITION_REQUIRED, e.getMessage());
+    }
+
 }
